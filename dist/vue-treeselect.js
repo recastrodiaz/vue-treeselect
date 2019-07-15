@@ -2315,6 +2315,7 @@ var keysThatRequireMenuBeingOpen = [KEY_CODES.ENTER, KEY_CODES.END, KEY_CODES.HO
         case KEY_CODES.ENTER:
           {
             evt.preventDefault();
+            if (instance.menu.current === null) return;
             var current = instance.getNode(instance.menu.current);
             if (current.isBranch && instance.disableBranchNodes) return;
             instance.select(current);
