@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeJsPlugin = require('optimize-js-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const WebpackCdnPlugin = require('webpack-cdn-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const config = require('../config')
@@ -25,7 +26,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       }),
     ],
   },
-  devtool: config.docs.productionSourceMap ? '#source-map' : false,
+  devtool: config.docs.productionSourceMap ? 'source-map' : false,
   plugins: [
     // extract css into its own file
     new MiniCssExtractPlugin({
@@ -36,8 +37,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: config.docs.index,
-      template: 'docs/index.pug',
+      ...config.docs.baseHtmlWebpackPluginOptions,
+      filename: config.docs.output,
       minify: {
         caseSensitive: true,
         removeComments: false,
@@ -48,6 +49,14 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency',
+    }),
+    new WebpackCdnPlugin({
+      modules: [ {
+        name: 'vue',
+        var: 'Vue',
+        path: 'dist/vue.min.js',
+      } ],
+      publicPath: '/node_modules',
     }),
     new CopyWebpackPlugin([ {
       from: path.join(__dirname, '../static'),
@@ -66,8 +75,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   optimization: {
     minimizer: [
       new TerserPlugin({
-        parallel: true,
         sourceMap: config.docs.productionSourceMap,
+        extractComments: false,
       }),
       new OptimizeJsPlugin({ sourceMap: config.docs.productionSourceMap }),
       new OptimizeCSSPlugin(),

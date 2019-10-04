@@ -33,7 +33,7 @@ const webpackConfig = merge(base, {
   externals: {
     vue: 'Vue',
   },
-  devtool: config.bundle.prod.productionSourceMap ? '#source-map' : false,
+  devtool: config.bundle.prod.productionSourceMap ? 'source-map' : false,
   plugins: [
     new MiniCssExtractPlugin({
       filename: config.bundle.prod.cssFilename,
@@ -44,8 +44,8 @@ const webpackConfig = merge(base, {
   optimization: {
     minimizer: [
       new TerserPlugin({
-        parallel: true,
         sourceMap: config.bundle.prod.productionSourceMap,
+        extractComments: false,
       }),
       new OptimizeJsPlugin({
         sourceMap: config.bundle.prod.productionSourceMap,
