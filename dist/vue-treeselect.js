@@ -1597,7 +1597,7 @@ var instanceId = 0;
         this.selectedNodes.forEach(function (selectedNode) {
           checkedStateMap[selectedNode.id] = CHECKED;
 
-          if (!_this15.flat && !_this15.disableBranchNodes) {
+          if (!_this15.disableBranchNodes) {
             selectedNode.ancestors.forEach(function (ancestorNode) {
               if (!_this15.isSelected(ancestorNode)) {
                 checkedStateMap[ancestorNode.id] = INDETERMINATE;
