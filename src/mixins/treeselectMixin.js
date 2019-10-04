@@ -1527,7 +1527,7 @@ export default {
         this.selectedNodes.forEach(selectedNode => {
           checkedStateMap[selectedNode.id] = CHECKED
 
-          if (!this.flat && !this.disableBranchNodes) {
+          if (!this.disableBranchNodes) {
             selectedNode.ancestors.forEach(ancestorNode => {
               if (!this.isSelected(ancestorNode)) {
                 checkedStateMap[ancestorNode.id] = INDETERMINATE
