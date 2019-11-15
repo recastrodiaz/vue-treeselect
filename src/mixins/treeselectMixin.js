@@ -1816,6 +1816,11 @@ export default {
       if (this.flat) {
         this.addValue(node)
 
+        // If the children are not loaded. Load it before selecting the nodes
+        if (!node.isLeaf && !node.childrenStates.isLoaded) {
+          this.loadChildrenOptions(node)
+        }
+
         if (this.autoSelectAncestors) {
           node.ancestors.forEach(ancestor => {
             if (!this.isSelected(ancestor) && !ancestor.isDisabled) this.addValue(ancestor)
