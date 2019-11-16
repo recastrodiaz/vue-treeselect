@@ -112,14 +112,6 @@ export default {
     },
 
     /**
-     * Deprecated. Use `autoFocus` instead.
-     */
-    autofocus: {
-      type: Boolean,
-      default: false,
-    },
-
-    /**
      * Automatically focus the component on mount?
      */
     autoFocus: {
@@ -324,14 +316,6 @@ export default {
     },
 
     /**
-     * Deprecated. Use `instanceId` prop instead.
-     * @type {string|number}
-    */
-    id: {
-      default: null,
-    },
-
-    /**
      * Will be passed with all events as the last param.
      * Useful for identifying events origin.
     */
@@ -367,15 +351,6 @@ export default {
       default: function limitTextDefault(count) { // eslint-disable-line func-name-matching
         return `and ${count} more`
       },
-    },
-
-    /**
-     * Whether is externally loading options or not.
-     * Set `true` to show a spinner.
-     */
-    loading: {
-      type: Boolean,
-      default: false,
     },
 
     /**
@@ -905,16 +880,6 @@ export default {
   methods: {
     verifyProps() {
       warning(
-        () => this.id == null,
-        () => '`id` prop is deprecated. Use `instanceId` instead.',
-      )
-
-      warning(
-        () => !this.autofocus,
-        () => '`autofocus` prop is deprecated. Use `autoFocus` instead.',
-      )
-
-      warning(
         () => this.async ? this.searchable : true,
         () => 'For async search mode, the value of "searchable" prop must be true.',
       )
@@ -1341,10 +1306,14 @@ export default {
       }
 
       // Vue doesn't support directly watching on objects.
-      this.$watch(() => entry.options, () => {
-        // TODO: potential redundant re-initialization.
-        if (this.trigger.searchQuery === searchQuery) this.initialize()
-      }, { deep: true })
+      this.$watch(
+        () => entry.options,
+        () => {
+          // TODO: potential redundant re-initialization.
+          if (this.trigger.searchQuery === searchQuery) this.initialize()
+        },
+        { deep: true },
+      )
 
       if (searchQuery === '') {
         if (Array.isArray(this.defaultOptions)) {
@@ -1847,6 +1816,11 @@ export default {
       if (this.flat) {
         this.addValue(node)
 
+        // If the children are not loaded. Load it before selecting the nodes
+        if (!node.isLeaf && !node.childrenStates.isLoaded) {
+          this.loadChildrenOptions(node)
+        }
+
         if (this.autoSelectAncestors) {
           node.ancestors.forEach(ancestor => {
             if (!this.isSelected(ancestor) && !ancestor.isDisabled) this.addValue(ancestor)
@@ -1970,7 +1944,7 @@ export default {
   },
 
   mounted() {
-    if (this.autoFocus || this.autofocus) this.focusInput()
+    if (this.autoFocus) this.focusInput()
     if (!this.options && !this.async && this.autoLoadRootOptions) this.loadRootOptions()
     if (this.alwaysOpen) this.openMenu()
     if (this.async && this.defaultOptions) this.handleRemoteSearch()

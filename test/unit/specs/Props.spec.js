@@ -463,37 +463,6 @@ describe('Props', () => {
     })
   })
 
-  describe('autofocus', () => {
-    it('should focus the search input on mount', () => {
-      const wrapper = mount(Treeselect, {
-        attachToDocument: true,
-        propsData: {
-          options: [],
-          autofocus: true,
-          searchable: true,
-        },
-      })
-      const input = findInput(wrapper)
-      expect(document.activeElement).toBe(input.element)
-    })
-
-    it('deprecated', () => {
-      spyOn(console, 'error')
-
-      mount(Treeselect, {
-        propsData: {
-          options: [],
-          autofocus: true,
-        },
-      })
-
-      expect(console.error).toHaveBeenCalledWith(
-        '[Vue-Treeselect Warning]',
-        '`autofocus` prop is deprecated. Use `autoFocus` instead.',
-      )
-    })
-  })
-
   describe('autoFocus', () => {
     it('should focus the search input on mount', () => {
       const wrapper = mount(Treeselect, {
@@ -1472,24 +1441,6 @@ describe('Props', () => {
       expect(console.error).toHaveBeenCalledWith(
         '[Vue-Treeselect Warning]',
         'You are using flat mode. But you forgot to add "multiple=true"?',
-      )
-    })
-  })
-
-  describe('id', () => {
-    it('deprecated', () => {
-      spyOn(console, 'error')
-
-      mount(Treeselect, {
-        propsData: {
-          id: 'test',
-          options: [],
-        },
-      })
-
-      expect(console.error).toHaveBeenCalledWith(
-        '[Vue-Treeselect Warning]',
-        '`id` prop is deprecated. Use `instanceId` instead.',
       )
     })
   })
