@@ -1761,9 +1761,14 @@ export default {
         this.clear()
       }
 
-      const nextState = this.multiple && !this.flat
-        ? this.forest.checkedStateMap[node.id] === UNCHECKED
-        : !this.isSelected(node)
+      let nextState
+      if (this.multiple && this.flat) {
+        nextState = this.forest.checkedStateMap[node.id] === INDETERMINATE ? false : !this.isSelected(node)
+      } else {
+        nextState = this.multiple && !this.flat
+          ? this.forest.checkedStateMap[node.id] === UNCHECKED
+          : !this.isSelected(node)
+      }
 
       if (nextState) {
         this._selectNode(node)
