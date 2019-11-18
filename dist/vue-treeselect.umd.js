@@ -2964,7 +2964,13 @@ var instanceId = 0;
         this.clear();
       }
 
-      var nextState = this.multiple && !this.flat ? this.forest.checkedStateMap[node.id] === UNCHECKED : !this.isSelected(node);
+      var nextState;
+
+      if (this.multiple && this.flat) {
+        nextState = this.forest.checkedStateMap[node.id] === INDETERMINATE ? false : !this.isSelected(node);
+      } else {
+        nextState = this.multiple && !this.flat ? this.forest.checkedStateMap[node.id] === UNCHECKED : !this.isSelected(node);
+      }
 
       if (nextState) {
         this._selectNode(node);
